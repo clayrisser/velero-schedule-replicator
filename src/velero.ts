@@ -3,7 +3,7 @@ import Operator, { ResourceEventType } from '@dot-i/k8s-operator';
 import ora from 'ora';
 import Logger from './logger';
 import { Config } from './config';
-import { VeleroSchedule } from './types';
+import { VeleroScheduleObject } from './types';
 
 export default class VeleroOperator extends Operator {
   objectApi: k8s.KubernetesObjectApi;
@@ -32,12 +32,13 @@ export default class VeleroOperator extends Operator {
       this.version,
       this.plural,
       async (e) => {
+        const veleroScheduleObject = e.object as VeleroScheduleObject;
         try {
           const veleroSchedules = await this.getVeleroSchedules();
           const fromNamespaceSet = new Set(
             veleroSchedules.map(
-              (schedule: VeleroSchedule) =>
-                schedule.metadata.labels['dev.siliconhills/fromNamespace']
+              (schedule: VeleroScheduleObject) =>
+                schedule.metadata?.labels?.['dev.siliconhills/fromNamespace']
             )
           );
           if (
@@ -47,26 +48,7 @@ export default class VeleroOperator extends Operator {
           ) {
             const message = `schedule '${e.meta.name}' from namespace '${e.meta.namespace}'`;
             this.spinner.start(`cloning ${message}`);
-            await this.customObjectsApi.createNamespacedCustomObject(
-              this.group,
-              this.version,
-              this.config.veleroNamespace,
-              this.plural,
-              {
-                apiVersion: e.object.apiVersion,
-                kind: this.kind,
-                metadata: {
-                  name: e.object.metadata?.name,
-                  namespace: this.config.veleroNamespace,
-                  annotations: e.object.metadata?.annotations || {},
-                  labels: {
-                    'dev.siliconhills/fromNamespace': e.meta.namespace,
-                    ...(e.object.metadata?.labels || {})
-                  }
-                },
-                spec: (e.object as any).spec
-              }
-            );
+            await this.createVeleroSchedule(veleroScheduleObject);
             this.spinner.succeed(`cloned ${message}`);
           }
         } catch (err) {
@@ -79,7 +61,34 @@ export default class VeleroOperator extends Operator {
     );
   }
 
-  protected async getVeleroSchedules(): Promise<VeleroSchedule[]> {
+  protected async createVeleroSchedule({
+    apiVersion,
+    metadata,
+    spec
+  }: VeleroScheduleObject): Promise<void> {
+    await this.customObjectsApi.createNamespacedCustomObject(
+      this.group,
+      this.version,
+      this.config.veleroNamespace,
+      this.plural,
+      {
+        apiVersion,
+        kind: this.kind,
+        metadata: {
+          name: metadata?.name,
+          namespace: this.config.veleroNamespace,
+          annotations: metadata?.annotations || {},
+          labels: {
+            'dev.siliconhills/fromNamespace': metadata?.namespace,
+            ...(metadata?.labels || {})
+          }
+        },
+        spec
+      }
+    );
+  }
+
+  protected async getVeleroSchedules(): Promise<VeleroScheduleObject[]> {
     const { body } = await this.customObjectsApi.listNamespacedCustomObject(
       this.group,
       this.version,

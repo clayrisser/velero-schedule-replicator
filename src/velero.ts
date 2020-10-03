@@ -114,32 +114,50 @@ export default class VeleroOperator extends Operator {
     veleroScheduleObject: VeleroScheduleObject
   ): Promise<void> {
     const { apiVersion, metadata, spec } = veleroScheduleObject;
-    if (!metadata?.name) return;
-    await this.customObjectsApi.replaceNamespacedCustomObject(
+    if (!metadata?.name || !metadata?.namespace) return;
+    const { body } = await this.objectApi.read({
+      apiVersion,
+      kind: this.kind,
+      metadata: {
+        name: metadata?.name,
+        namespace: this.config.veleroNamespace,
+        annotations: metadata?.annotations || {},
+        labels: metadata.labels || {}
+      }
+    });
+    await this.customObjectsApi.patchNamespacedCustomObject(
       this.group,
       this.version,
       this.config.veleroNamespace,
       this.plural,
-      metadata?.name,
-      {
-        ...veleroScheduleObject,
-        apiVersion,
-        kind: this.kind,
-        metadata: {
-          ...metadata,
-          name: metadata?.name,
-          namespace: this.config.veleroNamespace,
-          annotations: metadata?.annotations || {},
-          labels: {
-            [`${this.labelNamespace}/fromNamespace`]: metadata?.namespace,
-            ...(metadata?.labels || {})
-          },
-          resourceVersion: (
-            (parseInt(metadata.resourceVersion || '0') || 0) + 1
-          ).toString()
+      metadata.name,
+      [
+        {
+          op: 'replace',
+          path: '/metadata/labels',
+          value: {
+            ...(metadata?.labels || {}),
+            ...(body.metadata?.labels || {})
+          }
         },
-        spec
-      }
+        {
+          op: 'replace',
+          path: '/metadata/annotations',
+          value: {
+            ...(metadata.annotations || {}),
+            ...(body.metadata?.annotations || {})
+          }
+        },
+        {
+          op: 'replace',
+          path: '/spec',
+          value: spec
+        }
+      ],
+      undefined,
+      undefined,
+      undefined,
+      { headers: { 'Content-Type': 'application/json-patch+json' } }
     );
   }
 

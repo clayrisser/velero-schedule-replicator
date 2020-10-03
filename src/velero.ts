@@ -16,6 +16,8 @@ export default class VeleroOperator extends Operator {
 
   plural = 'schedules';
 
+  labelNamespace = 'dev.siliconhills.velero';
+
   kind = 'Schedule';
 
   spinner = ora();
@@ -38,18 +40,38 @@ export default class VeleroOperator extends Operator {
           const fromNamespaceSet = new Set(
             veleroSchedules.map(
               (schedule: VeleroScheduleObject) =>
-                schedule.metadata?.labels?.['dev.siliconhills/fromNamespace']
+                schedule.metadata?.labels?.[
+                  `${this.labelNamespace}/fromNamespace`
+                ]
             )
           );
-          if (
-            e.meta.namespace !== this.config.veleroNamespace &&
-            e.type === ResourceEventType.Added &&
-            !fromNamespaceSet.has(e.meta.namespace)
-          ) {
-            const message = `schedule '${e.meta.name}' from namespace '${e.meta.namespace}'`;
-            this.spinner.start(`cloning ${message}`);
-            await this.createVeleroSchedule(veleroScheduleObject);
-            this.spinner.succeed(`cloned ${message}`);
+          if (e.meta.namespace !== this.config.veleroNamespace) {
+            switch (e.type) {
+              case ResourceEventType.Added: {
+                if (fromNamespaceSet.has(e.meta.namespace)) break;
+                const message = `schedule '${e.meta.name}' from namespace '${e.meta.namespace}'`;
+                this.spinner.start(`CLONING ${message}`);
+                await this.addVeleroSchedule(veleroScheduleObject);
+                this.spinner.succeed(`CLONED ${message}`);
+                break;
+              }
+              case ResourceEventType.Modified: {
+                if (!fromNamespaceSet.has(e.meta.namespace)) break;
+                const message = `schedule '${e.meta.name}' in namespace '${this.config.veleroNamespace}'`;
+                this.spinner.start(`MODIFYING ${message}`);
+                await this.modifyVeleroSchedule(veleroScheduleObject);
+                this.spinner.succeed(`MODIFYING ${message}`);
+                break;
+              }
+              case ResourceEventType.Deleted: {
+                if (!fromNamespaceSet.has(e.meta.namespace)) break;
+                const message = `schedule '${e.meta.name}' from namespace '${this.config.veleroNamespace}'`;
+                this.spinner.start(`DELETING ${message}`);
+                await this.deleteVeleroSchedule(veleroScheduleObject);
+                this.spinner.succeed(`DELETED ${message}`);
+                break;
+              }
+            }
           }
         } catch (err) {
           this.spinner.fail(
@@ -61,7 +83,7 @@ export default class VeleroOperator extends Operator {
     );
   }
 
-  protected async createVeleroSchedule({
+  protected async addVeleroSchedule({
     apiVersion,
     metadata,
     spec
@@ -79,12 +101,58 @@ export default class VeleroOperator extends Operator {
           namespace: this.config.veleroNamespace,
           annotations: metadata?.annotations || {},
           labels: {
-            'dev.siliconhills/fromNamespace': metadata?.namespace,
+            [`${this.labelNamespace}/fromNamespace`]: metadata?.namespace,
             ...(metadata?.labels || {})
           }
         },
         spec
       }
+    );
+  }
+
+  protected async modifyVeleroSchedule(
+    veleroScheduleObject: VeleroScheduleObject
+  ): Promise<void> {
+    const { apiVersion, metadata, spec } = veleroScheduleObject;
+    if (!metadata?.name) return;
+    await this.customObjectsApi.replaceNamespacedCustomObject(
+      this.group,
+      this.version,
+      this.config.veleroNamespace,
+      this.plural,
+      metadata?.name,
+      {
+        ...veleroScheduleObject,
+        apiVersion,
+        kind: this.kind,
+        metadata: {
+          ...metadata,
+          name: metadata?.name,
+          namespace: this.config.veleroNamespace,
+          annotations: metadata?.annotations || {},
+          labels: {
+            [`${this.labelNamespace}/fromNamespace`]: metadata?.namespace,
+            ...(metadata?.labels || {})
+          },
+          resourceVersion: (
+            (parseInt(metadata.resourceVersion || '0') || 0) + 1
+          ).toString()
+        },
+        spec
+      }
+    );
+  }
+
+  protected async deleteVeleroSchedule({
+    metadata
+  }: VeleroScheduleObject): Promise<void> {
+    if (!metadata?.name) return;
+    await this.customObjectsApi.deleteNamespacedCustomObject(
+      this.group,
+      this.version,
+      this.config.veleroNamespace,
+      this.plural,
+      metadata?.name
     );
   }
 

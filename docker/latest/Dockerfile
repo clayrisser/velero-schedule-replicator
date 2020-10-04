@@ -13,7 +13,7 @@ FROM node:12-alpine
 RUN apk add --no-cache \
   make
 
-COPY /opt/app/docker/latest/entrypoint.sh /usr/local/sbin/entrypoint
+COPY docker/latest/entrypoint.sh /usr/local/sbin/entrypoint
 
 RUN chmod +x /usr/local/sbin/entrypoint
 

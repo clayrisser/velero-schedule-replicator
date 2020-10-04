@@ -18,10 +18,11 @@ COPY docker/latest/entrypoint.sh /usr/local/sbin/entrypoint
 RUN chmod +x /usr/local/sbin/entrypoint
 
 COPY --from=builder /tmp/app /opt/app
-COPY . /tmp/app
-RUN make +build
 
 WORKDIR /opt/app
+
+COPY . /opt/app/
+RUN make +build
 
 ENV DEBUG_OPERATOR=false
 

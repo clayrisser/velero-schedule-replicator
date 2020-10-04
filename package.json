@@ -16,7 +16,11 @@
     "email": "jam@codejam.ninja",
     "url": "https://codejam.ninja"
   },
+  "bin": {
+    "silicon-operator": "bin/siliconOperator.js"
+  },
   "files": [
+    "bin",
     "lib"
   ],
   "main": "lib/index.js",
@@ -92,5 +96,8 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "none"
+  },
+  "docker": {
+    "registry": "codejamninja"
   }
 }

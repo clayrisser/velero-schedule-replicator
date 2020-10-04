@@ -144,7 +144,7 @@ test-watch: ~lint
 start: ~format
 	@$(MAKE) -s +start
 +start:
-	@$(BABEL_NODE) --extensions '.ts,.tsx' src $(ARGS)
+	@$(BABEL_NODE) --extensions '.ts,.tsx' src/bin $(ARGS)
 
 .PHONY: clean
 clean:
@@ -175,6 +175,16 @@ purge: clean
 .PHONY: report
 report: spellcheck lint test
 	@
+
+docker-%:
+	@$(MAKE) -s -C docker $(shell echo $@ | sed "s/docker-//")
+
+.PHONY: logs stop up pull push
+logs: docker-logs
+pull: docker-pull
+push: docker-push
+stop: docker-stop
+up: docker-up
 
 %:
 	@

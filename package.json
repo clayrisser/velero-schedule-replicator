@@ -33,7 +33,7 @@
     "clean": "make -s clean",
     "coverage": "make -s coverage",
     "format": "make -s format",
-    "inc": "npm version patch --git=false 2>/dev/null || true",
+    "inc": "make -s inc",
     "lint": "make -s lint",
     "make": "make",
     "prepare": "make -s prepare",

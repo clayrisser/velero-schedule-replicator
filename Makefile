@@ -176,6 +176,14 @@ purge: clean
 report: spellcheck lint test
 	@
 
+.PHONY: inc
+inc:
+	@npm version patch --git=false 2>/dev/null || true
+
+.PHONY: publish
+publish: build
+	@$(NPM) publish
+
 docker-%:
 	@$(MAKE) -s -C docker $(shell echo $@ | sed "s/docker-//")
 

@@ -1,6 +1,6 @@
 {
   "name": "@operators/velero-schedule-replicator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "operator to replicate velero schedules across namespaces",
   "keywords": [
     "velero-schedule-replicator"

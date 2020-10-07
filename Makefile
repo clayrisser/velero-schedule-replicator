@@ -15,7 +15,7 @@ BUILD_DEPS := $(patsubst src/%.ts,lib/%.d.ts,$(shell find src -name '*.ts' -not 
 	$(patsubst src/%.tsx,lib/%.d.ts,$(shell find src -name '*.tsx'))
 BUILD_TARGET := $(BUILD_DEPS) lib
 
-FORMAT_DEPS := $(patsubst %,$(DONE)/_format/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -E "\.((json)|(ya?ml)|(md)|([jt]sx?))$$"))
+FORMAT_DEPS := $(patsubst %,$(DONE)/_format/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -v -E "^charts\/" | grep -E "\.((json)|(ya?ml)|(md)|([jt]sx?))$$"))
 FORMAT_TARGET := $(FORMAT_DEPS) $(DONE)/format
 
 LINT_DEPS := $(patsubst %,$(DONE)/_lint/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -E "\.([jt]sx?)$$"))
@@ -37,7 +37,7 @@ install: _install ~install
 _install:
 	-@rm -rf $(DONE)/install $(NOFAIL)
 $(DONE)/install: package.json
-	@$(NPM) install
+	@$(NPM) install $(ARGS)
 	@$(call done,install)
 
 .PHONY: prepare

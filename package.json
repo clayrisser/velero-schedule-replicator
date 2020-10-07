@@ -17,7 +17,7 @@
     "url": "https://codejam.ninja"
   },
   "bin": {
-    "velero-schedule-replicator": "bin/siliconOperator.js"
+    "velero-schedule-replicator": "bin/veleroScheduleReplicator.js"
   },
   "files": [
     "bin",

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "velero-schedule-replicator.fullname" . }}-velero-schedule-replicator
+  labels:
+    app: {{ template "velero-schedule-replicator.name" . }}-velero-schedule-replicator
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "velero-schedule-replicator.name" . }}-velero-schedule-replicator
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "velero-schedule-replicator.name" . }}-velero-schedule-replicator
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "velero-schedule-replicator.fullname" . }}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "velero-schedule-replicator.name" . }}-velero-schedule-replicator
+      containers:
+        - name: {{ template "velero-schedule-replicator.fullname" . }}-velero-schedule-replicator
+          image: {{ .Values.images.veleroScheduleReplicator.repository }}:{{ .Values.images.veleroScheduleReplicator.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          # resources:
+          #   requests:
+          #     cpu: {{ .Values.config.veleroScheduleReplicator.resources.requests.cpu }}
+          #     memory: {{ .Values.config.veleroScheduleReplicator.resources.requests.memory }}
+          #   limits:
+          #     cpu: {{ .Values.config.veleroScheduleReplicator.resources.limits.cpu }}
+          #     memory: {{ .Values.config.veleroScheduleReplicator.resources.limits.memory }}
+          env: []
+        - name: {{ template "velero-schedule-replicator.fullname" . }}-kubectl
+          image: bitnami/kubectl:1.17.12
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              kubectl proxy

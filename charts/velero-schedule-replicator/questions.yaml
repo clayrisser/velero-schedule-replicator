@@ -1,0 +1,74 @@
+categories:
+  - Server
+questions:
+  # Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  # - variable: config.veleroScheduleReplicator.resources.defaults
+  #   default: true
+  #   description: ''
+  #   type: boolean
+  #   required: true
+  #   label: 'velero schedule replicator resources defaults'
+  #   show_subquestion_if: false
+  #   group: Config
+  #   subquestions:
+  #     - variable: config.veleroScheduleReplicator.resources.requests.cpu
+  #       default: 100m
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'velero schedule replicator resources requests cpu'
+  #     - variable: config.veleroScheduleReplicator.resources.requests.memory
+  #       default: 128Mi
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'velero schedule replicator resources requests memory'
+  #     - variable: config.veleroScheduleReplicator.resources.limits.cpu
+  #       default: 500m
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'velero schedule replicator resources limits cpu'
+  #     - variable: config.veleroScheduleReplicator.resources.limits.memory
+  #       default: 256Mi
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'velero schedule replicator resources limits memory'
+
+  # Images
+  - variable: images.veleroScheduleReplicator.repository
+    default: codejamninja/velero-schedule-replicator
+    description: ''
+    type: string
+    required: true
+    label: 'velero schedule replicator repository'
+    group: Images
+  - variable: images.veleroScheduleReplicator.tag
+    default: 0.0.1
+    description: ''
+    type: string
+    required: true
+    label: 'velero schedule replicator tag'
+    group: Images

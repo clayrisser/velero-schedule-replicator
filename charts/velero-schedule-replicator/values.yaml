@@ -1,0 +1,19 @@
+images:
+  veleroScheduleReplicator:
+    repository: codejamninja/velero-schedule-replicator
+    tag: 0.0.1
+
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  veleroScheduleReplicator:
+    baseUrl: ''
+    hostname: ''
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi

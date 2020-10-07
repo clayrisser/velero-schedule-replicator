@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec node bin/siliconOperator.js $@
+exec node bin/veleroScheduleReplicator.js $@

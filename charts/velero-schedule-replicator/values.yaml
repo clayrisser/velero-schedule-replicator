@@ -1,6 +1,6 @@
 images:
   veleroScheduleReplicator:
-    repository: codejamninja/velero-schedule-replicator
+    repository: codejamninja/operators_velero-schedule-replicator
     tag: 0.0.1
 
 config:

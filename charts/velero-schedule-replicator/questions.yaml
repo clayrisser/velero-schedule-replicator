@@ -59,7 +59,7 @@ questions:
 
   # Images
   - variable: images.veleroScheduleReplicator.repository
-    default: codejamninja/velero-schedule-replicator
+    default: codejamninja/operators_velero-schedule-replicator
     description: ''
     type: string
     required: true

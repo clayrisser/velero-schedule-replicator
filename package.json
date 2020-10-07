@@ -1,13 +1,13 @@
 {
-  "name": "silicon-operator",
+  "name": "velero-schedule-replicator",
   "version": "0.0.1",
-  "description": "operator to improve kubernetes in random ways",
+  "description": "operator to replicate velero schedules across namespaces",
   "keywords": [
-    "silicon-operator"
+    "velero-schedule-replicator"
   ],
-  "homepage": "https://github.com/codejamninja/silicon-operator",
+  "homepage": "https://github.com/codejamninja/velero-schedule-replicator",
   "bugs": {
-    "url": "https://github.com/codejamninja/silicon-operator/issues",
+    "url": "https://github.com/codejamninja/velero-schedule-replicator/issues",
     "email": "jam@codejam.ninja"
   },
   "license": "MIT",
@@ -17,7 +17,7 @@
     "url": "https://codejam.ninja"
   },
   "bin": {
-    "silicon-operator": "bin/siliconOperator.js"
+    "velero-schedule-replicator": "bin/siliconOperator.js"
   },
   "files": [
     "bin",
@@ -26,7 +26,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/codejamninja/silicon-operator"
+    "url": "https://github.com/codejamninja/velero-schedule-replicator"
   },
   "scripts": {
     "build": "make -s build",

@@ -1,8 +1,8 @@
-# silicon-operator
+# velero-schedule-replicator
 
-[![GitHub stars](https://img.shields.io/github/stars/codejamninja/silicon-operator.svg?style=social&label=Stars)](https://github.com/codejamninja/silicon-operator)
+[![GitHub stars](https://img.shields.io/github/stars/codejamninja/velero-schedule-replicator.svg?style=social&label=Stars)](https://github.com/codejamninja/velero-schedule-replicator)
 
-> operator to improve kubernetes in random ways
+> operator to replicate velero schedules across namespaces
 
 Please ★ this repo if you found it useful ★ ★ ★
 
@@ -12,29 +12,29 @@ Please ★ this repo if you found it useful ★ ★ ★
 
 ## Usage
 
-[Contribute](https://github.com/codejamninja/silicon-operator/blob/master/CONTRIBUTING.md) usage docs
+[Contribute](https://github.com/codejamninja/velero-schedule-replicator/blob/master/CONTRIBUTING.md) usage docs
 
 ## Support
 
-Submit an [issue](https://github.com/codejamninja/silicon-operator/issues/new)
+Submit an [issue](https://github.com/codejamninja/velero-schedule-replicator/issues/new)
 
 ## Screenshots
 
-[Contribute](https://github.com/codejamninja/silicon-operator/blob/master/CONTRIBUTING.md) a screenshot
+[Contribute](https://github.com/codejamninja/velero-schedule-replicator/blob/master/CONTRIBUTING.md) a screenshot
 
 ## Contributing
 
-Review the [guidelines for contributing](https://github.com/codejamninja/silicon-operator/blob/master/CONTRIBUTING.md)
+Review the [guidelines for contributing](https://github.com/codejamninja/velero-schedule-replicator/blob/master/CONTRIBUTING.md)
 
 ## License
 
-[MIT License](https://github.com/codejamninja/silicon-operator/blob/master/LICENSE)
+[MIT License](https://github.com/codejamninja/velero-schedule-replicator/blob/master/LICENSE)
 
 [Jam Risser](https://codejam.ninja) © 2020
 
 ## Changelog
 
-Review the [changelog](https://github.com/codejamninja/silicon-operator/blob/master/CHANGELOG.md)
+Review the [changelog](https://github.com/codejamninja/velero-schedule-replicator/blob/master/CHANGELOG.md)
 
 ## Credits
 

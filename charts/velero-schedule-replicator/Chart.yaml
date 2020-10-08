@@ -2,7 +2,7 @@ name: velero-schedule-replicator
 apiVersion: v1
 home: https://codejam.ninja
 icon: ''
-version: 0.0.1
+version: 0.0.2
 appVersion: latest
 description: 'operator to replicate velero schedules across namespaces'
 keywords:

@@ -1,7 +1,7 @@
 images:
   veleroScheduleReplicator:
     repository: codejamninja/operators_velero-schedule-replicator
-    tag: 0.0.1
+    tag: 0.0.2
 
 config:
   clusterProvider: infrastructure

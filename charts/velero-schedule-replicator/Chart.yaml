@@ -4,7 +4,7 @@ home: https://codejam.ninja
 icon: ''
 version: 0.0.1
 appVersion: latest
-description: 'operator to improve kubernetes in random ways'
+description: 'operator to replicate velero schedules across namespaces'
 keywords:
   - silicon
   - operator

@@ -4,6 +4,8 @@
 
 > operator to replicate velero schedules across namespaces
 
+![](assets/velero-schedule-replicator.png)
+
 Please ★ this repo if you found it useful ★ ★ ★
 
 ## Dependencies
